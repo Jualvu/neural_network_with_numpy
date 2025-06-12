@@ -6,7 +6,6 @@ from Layer_Dense import Layer_Dense
 from CategoricalCrossentropyLoss import CategoricalCrossentropyLoss 
 from activations.ReLU import ReLU 
 from activations.Softmax import Softmax 
-from Mean_Squared_Error import Mean_Squared_Error
 from Layer_Activation import Layer_Activation
 import matplotlib.pyplot as plt
 
@@ -15,8 +14,8 @@ mnist_dataset_test = pd.read_csv('mnist_dataset/mnist_train.csv')
 
 
 #separate features and labels for testing
-X = mnist_dataset_test.iloc[:5000, 1:]
-y = mnist_dataset_test.iloc[:5000, 0:1]
+X = mnist_dataset_test.iloc[:10, 1:]
+y = mnist_dataset_test.iloc[:10, 0:1]
 
 
 #print X and y
@@ -41,6 +40,8 @@ dense2.load_weights("values/w_layer2.npy")
 dense2.load_biases("values/b_layer2.npy")
 dense3.load_weights("values/w_layer3.npy")
 dense3.load_biases("values/b_layer3.npy")
+
+
 
 
 
@@ -81,7 +82,7 @@ for x, y_true in zip(X, y):
     sample += 1
     # FORWARD PROP
     #initiliaze output values with the m sample from the x tranining data
-    output = x.reshape(1, -1) 
+    output = x.reshape(1, -1) # normalize
 
     for layer in layers:
         #keep propagating forward the output values from layer to layer
@@ -97,23 +98,25 @@ for x, y_true in zip(X, y):
 
     if np.argmax(output) == y_true:
         correct_predictions += 1
-    else:
-        # Pick one sample
-        image = x.reshape(28, 28)  # reshape the flat image
+    # Code to see wrong predicted cases
+    # else:
+    #     # Pick one sample
+    #     image = x.reshape(28, 28)  # reshape the flat image
 
-        # Plot it
-        plt.imshow(image, cmap='gray')
-        plt.title(f'True: {y_true} | Pred: {np.argmax(output)}')
-        plt.axis('off')
-        plt.show()
+    #     # Plot it
+    #     plt.imshow(image, cmap='gray')
+    #     plt.title(f'True: {y_true} | Pred: {np.argmax(output)}')
+    #     plt.axis('off')
+    #     plt.show()
 
-
+    # Code to see the full 0-9 classes predictions
     # print("full output:\n")
     # i = 0
     # for num in output[0]:
     #     print(f"i: {i}  ---> {num:.4f}")
     #     i += 1
 
+    # code to check the sum of predictions == 1
     # print("sum:")
     # print(np.sum(output[0]))
 
@@ -125,7 +128,7 @@ for x, y_true in zip(X, y):
     # Pick one sample
     # image = x.reshape(28, 28)  # reshape the flat image
 
-    # # Plot it
+    # # Plot corrected sample
     # plt.imshow(image, cmap='gray')
     # plt.title(f'True: {y_true} | Pred: {np.argmax(output)}')
     # plt.axis('off')

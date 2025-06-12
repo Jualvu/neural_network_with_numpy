@@ -4,17 +4,14 @@ import os
 print(os.getcwd())
 from Layer_Dense import Layer_Dense 
 from CategoricalCrossentropyLoss import CategoricalCrossentropyLoss 
-from activations.ReLU import ReLU 
-from activations.Softmax import Softmax 
-from Mean_Squared_Error import Mean_Squared_Error
 from Layer_Activation import Layer_Activation
 
 #import mnist dataset
 mnist_dataset = pd.read_csv('mnist_dataset/mnist_train.csv')
 
 #separate features and labels
-X = mnist_dataset.iloc[:, 1:]
-y = mnist_dataset.iloc[:, 0:1]
+X = mnist_dataset.iloc[:, 1:]  # dont use first columns since its y value
+y = mnist_dataset.iloc[:, 0:1] # use only first column since its y value
 
 
 
@@ -62,11 +59,7 @@ for layer in layers:
     if(type(layer) == Layer_Dense):
         print("(" + str(layer.input_neurons_size) + ", "+ str(layer.output_neurons_size) + ")")
 
-epochs = 10
-learning_rate = 0.0001
 
-X = X.to_numpy()
-y = y.to_numpy()
 
 #Normalize the X values
 X = X / 255.0
@@ -86,8 +79,11 @@ dense3.load_weights("values/w_layer3.npy")
 dense3.load_biases("values/b_layer3.npy")
 
 
+epochs = 1
+learning_rate = 0.0001
 
-
+X = X.to_numpy()
+y = y.to_numpy()
 
 
 #train the model
@@ -174,14 +170,6 @@ for i in range(epochs):
             # print("layer : " + str(i))
             # i += 1
             dE_dY = layer.backward(output_gradient=dE_dY, learning_rate=learning_rate)
-        
-
-    j = 3
-    for layer in reversed(layers):
-            if type(layer) == Layer_Dense:
-                save_weights(file_name=f"values/w_layer{j}.npy", weights=layer.weights)
-                save_biases(file_name=f"values/b_layer{j}.npy", biases=layer.biases)
-                j -= 1
 
     # Print every 10 epochs (you can change the interval)
     # if i % 2 == 0:
@@ -193,8 +181,16 @@ for i in range(epochs):
 
 
 
+# Code to save weights and biases after training
+print(f"Saving weights and biases:\n")
 
-
+j = 3
+for layer in reversed(layers):
+        if type(layer) == Layer_Dense:
+            # save weights
+            save_weights(file_name=f"values/w_layer{j}.npy", weights=layer.weights)
+            save_biases(file_name=f"values/b_layer{j}.npy", biases=layer.biases)
+            j -= 1
 
 
 
